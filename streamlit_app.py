@@ -1,6 +1,5 @@
 # Import python packages.
 import streamlit as st
-import pandas as pd
 from snowflake.snowpark.functions import col
 cnx = st.connection("snowflake")
 session = cnx.session()
@@ -18,11 +17,11 @@ st.write(
 name_on_order = st.text_input('Name on Smoothie:')
 st.write('The name on your Smoothie will be:', name_on_order)
 
-my_dataframe = session.table("smoothies.public.fruit_options").select(col('FRUIT_NAME'))
+my_dataframe = session.table("smoothies.public.fruit_options").select(col('FRUIT_NAME'),col('SEARCH_ON'))
 # st.dataframe(data=my_dataframe, use_container_width=True)
 # st.stop()
 
-# Convert the Snowpark Dataframe to a Pandas Dataframe so we can use de LOC Function
+# Convert the Snowpark Dataframe to a Pandas Dataframe so we can use de LOC function
 pd_df=my_dataframe.to_pandas()
 st.dataframe(pd_df)
 st.stop()
@@ -59,7 +58,5 @@ if ingredients_list:
     if time_to_insert:
         session.sql(my_insert_stmt).collect()
         st.success(f'Your Smoothie is ordered, {name_on_order}!', icon="✅")
-
-
 
 
